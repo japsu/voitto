@@ -50,6 +50,11 @@ class Event(object):
         self.description = description
         self.entries = entries
 
+class Entry(object):
+    def __init__(self, account_number, cents):
+        self.account_number = account_number
+        self.cents = cents
+
 TOKENS = (
     'brace_open',
     'brace_close',
@@ -383,3 +388,13 @@ class Parser(object):
 
         event = Event(int(number), date, description, entries)
         self.document.events.append(event)
+
+    def parse_entry(self):
+        self.token("brace_open")
+        
+        unused, account_number = self.token("integer")
+        cents = self.parse_money()
+
+        self.token("brace_close")
+
+        return Entry(int(account_number), cents)
