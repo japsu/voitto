@@ -33,8 +33,8 @@ COMPLEX_EXAMPLE = """
                        (date 2003 1 1)
                        (date 2003 12 31)
                        (account-map (account -1 "Vastaavaa" ((account 101 "Pankkitili")))
-                                    (account -1 "Vastattavaa" ((account 201 "Oma p\xe4\xe4oma"))
-                                    (account -1 "Tulos" ((account 300 "Tulot") (account 400 "Menot")))))
+                                    (account -1 "Vastattavaa" ((account 201 "Oma p\xe4\xe4oma")))
+                                    (account -1 "Tulos" ((account 300 "Tulot") (account 400 "Menot"))))              
                        ((event 1 (date 2003 1 1) "Tilinavaus" ((101 (money 123456)) (201 (money -123456)))))))
 """
 
@@ -131,10 +131,10 @@ def run_lexer_tests():
         ('brace_open', ''),
         ('symbol', 'account'), ('integer', '-1'), ('string', 'Vastattavaa'),
 
-        # ((account 201 "Oma pääoma""))
+        # ((account 201 "Oma pääoma"")))
         ('brace_open', ''), ('brace_open', ''),
         ('symbol', 'account'), ('integer', '201'), ('string', 'Oma p\xe4\xe4oma'),
-        ('brace_close', ''), ('brace_close', ''),
+        ('brace_close', ''), ('brace_close', ''), ('brace_close', ''),
 
         # (account -1 "Tulos"
         ('brace_open', ''),
@@ -148,7 +148,7 @@ def run_lexer_tests():
         # (account 400 "Menot")))))
         ('brace_open', ''),
         ('symbol', 'account'), ('integer', '400'), ('string', 'Menot'),
-        ('brace_close', ''), ('brace_close', ''), ('brace_close', ''), ('brace_close', ''), ('brace_close', ''),
+        ('brace_close', ''), ('brace_close', ''), ('brace_close', ''), ('brace_close', ''),
 
         # ((event 1
         ('brace_open', ''), ('brace_open', ''), ('symbol', 'event'), ('integer', '1'),
