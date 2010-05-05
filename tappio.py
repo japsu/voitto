@@ -18,6 +18,38 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+import datetime
+import libvoitto
+
+DEFAULT_IDENTITY = "Tappio"
+DEFAULT_BEGIN = datetime.date(2010, 1, 1)
+DEFAULT_END = datetime.date(2010, 12, 31)
+
+class Document(object):
+    def __init__(self, identity=DEFAULT_IDENTITY, version=libvoitto.VERSION,
+            name="", begin=DEFAULT_BEGIN, end=DEFAULT_END, accounts=[],
+            events=[]):
+        self.identity = identity
+        self.version = version
+        self.name = name
+        self.begin = begin
+        self.end = end
+        self.accounts = accounts
+        self.events = events 
+
+class Account(object):
+    def __init__(self, number=None, name="", subaccounts=[]):
+        self.number = number
+        self.name = name
+        self.subaccounts = subaccounts
+
+class Event(object):
+    def __init__(self, number, date, description="", entries=[]):
+        self.number = number
+        self.date = date
+        self.description = description
+        self.entries = entries
+
 TOKENS = (
     'brace_open',
     'brace_close',
@@ -85,13 +117,16 @@ class Lexer(object):
             yield tok
 
     def lex_string(self, s):
-        for tok in self.feed(s):
-            yield tok
+        for linenum, line in enumerate(s.split("\n"), start=1):
+            self.linenum = linenum
+            for tok in self.feed(line):
+                yield tok
         for tok in self.eof():
             yield tok
 
     def feed(self, s):
-        for ch in s:
+        for chnum, ch in enumerate(s, start=1):
+            self.chnum = chnum
             getattr(self, self.state)(ch)
             while self.tokens:
                 yield self.tokens.pop(0)
@@ -172,3 +207,179 @@ class Lexer(object):
     def string_escape(self, ch):
         self.save(ch)
         self.enter("string")
+
+class ParserError(RuntimeError):
+    pass
+
+class Parser(object):
+    """A recursive descent parser for the Tappio file format.
+
+    Takes in a stream of Tokens and makes a Document from them."""
+
+    def __init__(self, tokens):
+        self.document = Document()
+        self.token_iterator = iter(tokens)
+        self.next_token = None
+
+    def error(self, message, *args, **kwargs):
+        raise ParserError(message.format(*args, **kwargs))
+
+    def token(self, expected_type=None, expected_value=None):
+        if self.next_token is not None:
+            token = self.next_token
+            self.next_token = None
+        else:
+            try:
+                token = self.token_iterator.next()
+            except StopIteration:
+                self.error("end of file while expecting {0}", expected_type)
+
+        if expected_type is not None and expected_type != token.token_type:
+            self.error("expected {0}, got {1}", expected_type, token.token_type)
+
+        if expected_value is not None and expected_value != token.value:
+            self.error("{0}: expected {1}, got {2}", token_type, expected_value, token.value)
+
+        return token.token_type, token.value
+
+    def peek(self):
+        if self.next_token is not None:
+            token = self.next_token
+        else:
+            try:
+                token = self.token_iterator.next()
+                self.next_token = token
+            except StopIteration:
+                token = None
+
+        if token is None:
+            return None, None
+        else:
+            return token.token_type, token.value
+
+    def parse_document(self):
+        self.token("brace_open")
+        self.token("symbol", "identity")
+        unused, self.document.identity = self.token("string", "Tappio")
+
+        self.token("symbol", "version")
+        unused, self.document.version = self.token("string")
+
+        self.token("symbol", "finances")
+
+        self.parse_fiscal_year()
+
+        self.token("brace_close")
+
+        return self.document
+
+    def parse_fiscal_year(self):
+        self.token("brace_open")
+
+        self.token("symbol", "fiscal-year")
+        unused, self.document.name = self.token("string")
+
+        self.document.begin = self.parse_date()
+        self.document.end = self.parse_date()
+
+        self.parse_account_map()
+        self.parse_events()
+
+        self.token("brace_close")
+
+    def parse_date(self):
+        self.token("brace_open")
+        self.token("symbol", "date")
+
+        unused, year = self.token("integer")
+        unused, month = self.token("integer")
+        unused, day = self.token("integer")
+
+        self.token("brace_close")
+
+        return datetime.datetime(int(year), int(month), int(day))
+
+    def parse_money(self):
+        self.token("brace_open")
+        self.token("symbol", "money")
+        unused, cents = self.token("integer")
+        self.token("brace_close")
+        return int(cents)
+
+    def parse_account_map(self):
+        self.token("brace_open")
+        self.token("symbol", "account-map")
+        
+        next_type, unused = self.peek()
+        while next_type == "brace_open":
+            self.document.accounts.append(self.parse_account())
+            next_type, unused = self.peek()
+
+        self.token("brace_close")
+
+    def parse_account(self):
+        self.token("brace_open")
+        self.token("symbol", "account")
+
+        unused, account_number = self.token("integer")
+        account_number = int(account_number)
+        if account_number < -1:
+            self.error("invalid account number: {0}", account_number)
+        elif account_number == -1:
+            # Account group
+            account_number = None
+
+        unused, account_name = self.token("string")
+
+        # Sub-accounts
+        subaccounts = []
+        next_type, unused = self.peek()
+        if next_type == "brace_open":
+            self.token("brace_open")
+
+            next_type, unused = self.peek()
+            while next_type == "brace_open":
+                subaccounts.append(self.parse_account())
+                next_type, unused = self.peek()
+
+            self.token("brace_close")
+
+        self.token("brace_close")
+
+        return Account(account_number, account_name, subaccounts)
+
+    def parse_events(self):
+        self.token("brace_open")
+
+        next_type, unused = self.peek()
+        while next_type == "brace_open":
+            self.parse_event()
+            next_type, unused = self.peek()
+
+        self.token("brace_close")
+
+    def parse_event(self):
+        self.token("brace_open")
+
+        self.token("symbol", "event")
+        
+        unused, number = self.token("integer")
+        date = self.parse_date()
+        unused, description = self.token("string")
+        
+        entries = []
+        next_type, unused = self.peek()
+        if next_type == "brace_open":
+            self.token("brace_open")
+
+            next_type, unused = self.peek()
+            while next_type == "brace_open":
+                entries.append(self.parse_entry())
+                next_type, unused = self.peek()
+
+            self.token("brace_close")
+
+        self.token("brace_close")
+
+        event = Event(int(number), date, description, entries)
+        self.document.events.append(event)

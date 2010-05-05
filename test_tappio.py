@@ -21,6 +21,23 @@
 
 from tappio import *
 
+SIMPLE_EXAMPLE = """
+(identity "Tappio" version "versio 0.22" finances (fiscal-year "test" (date 2010 1 1) (date 2010 12 31) (account-map (account -1 "Vastaavaa" ()) (account -1 "Vastattavaa" ()) (account -1 "Tulos" ())) ()))
+"""
+
+# http://www.lahdenniemi.fi/jussi/tappio/formaatti.html
+COMPLEX_EXAMPLE = """
+(identity "Tappio"
+ version "versio 0.10"
+ finances (fiscal-year "Esimerkkiyhdistys ery"
+                       (date 2003 1 1)
+                       (date 2003 12 31)
+                       (account-map (account -1 "Vastaavaa" ((account 101 "Pankkitili")))
+                                    (account -1 "Vastattavaa" ((account 201 "Oma p\xe4\xe4oma"))
+                                    (account -1 "Tulos" ((account 300 "Tulot") (account 400 "Menot")))))
+                       ((event 1 (date 2003 1 1) "Tilinavaus" ((101 (money 123456)) (201 (money -123456)))))))
+"""
+
 class TestFailure(RuntimeError):
     pass
 
@@ -78,18 +95,7 @@ def run_lexer_tests():
     test_lexer(r'"foo\\bar"', [("string", r'foo\bar')])
 
     # complex tests
-    # http://www.lahdenniemi.fi/jussi/tappio/formaatti.html
-    test_lexer("""
-(identity "Tappio"
- version "versio 0.10"
- finances (fiscal-year "Esimerkkiyhdistys ery"
-                       (date 2003 1 1)
-                       (date 2003 12 31)
-                       (account-map (account -1 "Vastaavaa" ((account 101 "Pankkitili")))
-                                    (account -1 "Vastattavaa" ((account 201 "Oma p\xe4\xe4oma"))
-                                    (account -1 "Tulos" ((account 300 "Tulot") (account 400 "Menot")))))
-                       ((event 1 (date 2003 1 1) "Tilinavaus" ((101 (money 123456)) (201 (money -123456)))))))
-""", [
+    test_lexer(COMPLEX_EXAMPLE, [
         # (identity "Tappio" version "versio 0.10" finances (
         ('brace_open', ''),
         ('symbol', 'identity'), ('string', 'Tappio'),
@@ -167,8 +173,22 @@ def run_lexer_tests():
         ('brace_close', ''), ('brace_close', ''), ('brace_close', ''),
     ])  
 
+def test_parser(input):
+    lex = Lexer()
+
+    try:
+        print Parser(lex.lex_string(input)).parse_document()
+    except ParserError, e:
+        print lex.linenum, lex.chnum
+        raise e
+
+def run_parser_tests():
+    test_parser(SIMPLE_EXAMPLE)
+    test_parser(COMPLEX_EXAMPLE)
+
 def run_tests():
     run_lexer_tests()
+    run_parser_tests()
 
 if __name__ == "__main__":
     run_tests()
