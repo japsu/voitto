@@ -19,36 +19,145 @@
 #
 
 import datetime
+import sys
 import libvoitto
+
 
 DEFAULT_IDENTITY = "Tappio"
 DEFAULT_BEGIN = datetime.date(2010, 1, 1)
 DEFAULT_END = datetime.date(2010, 12, 31)
 
+class Writer(object):
+    def __init__(self, stream=sys.stdout):
+        self.stream = stream
+        self.prev_token = None
+
+    def write(self, *tokens):
+        for token in tokens:
+            if self.should_put_space_between(self.prev_token, token):
+                self.stream.write(" ")
+            self.stream.write(str(token))
+
+            self.prev_token = token
+
+    def should_put_space_between(self, prev_token, token):
+        if prev_token is None:
+            return False
+        elif prev_token == ")" and token == "(":
+            return True
+        else:
+            return (prev_token not in ("(",")")) and (token != ")")
+
+    def write_string(self, string):
+        self.write('"' + self.escape_string(string) + '"')
+
+    def write_date(self, date):
+        self.write("(", "date", date.year, date.month, date.day, ")")
+
+    def write_money(self, cents):
+        self.write("(", "money", cents, ")")
+
+    def escape_string(self, string):
+        return "".join(self.escape_char(ch) for ch in string)
+
+    def escape_char(self, ch):
+        if ch == '\n':
+            return r'\n'
+        elif ch == '"':
+            return r'\"'
+        elif ch == '\\':
+            return r'\\'
+        else:
+            return ch
+
+    def write_document(self, document):
+        self.write("(", "identity")
+        self.write_string(document.identity)
+    
+        self.write("version")
+        self.write_string(document.version)
+
+        self.write("finances", "(", "fiscal-year")
+        self.write_string(document.name)
+
+        self.write_date(document.begin)
+        self.write_date(document.end)
+
+        self.write_accounts(document.accounts)
+        self.write_events(document.events)
+
+        self.write(")", ")")
+
+    def write_accounts(self, accounts):
+        self.write("(", "account-map")
+        for account in accounts:
+            self.write_account(account)
+        self.write(")")
+
+    def write_account(self, account):
+        self.write("(", "account", account.number if account.number is not None else -1)
+        self.write_string(account.name)
+
+        if account.subaccounts:
+            self.write("(")
+            for subaccount in account.subaccounts:
+                self.write_account(subaccount)
+            self.write(")")
+
+        self.write(")")
+
+    def write_events(self, events):
+        self.write("(")
+
+        for event in events:
+            self.write_event(event)
+
+        self.write(")")
+
+    def write_event(self, event):
+        self.write("(", "event", event.number)
+        self.write_date(event.date)
+        self.write_string(event.description)
+        self.write_entries(event.entries)
+        self.write(")")
+
+    def write_entries(self, entries):
+        self.write("(")
+        
+        for entry in entries:
+            self.write_entry(entry)
+
+        self.write(")")
+
+    def write_entry(self, entry):
+        self.write("(", entry.account_number)
+        self.write_money(entry.cents)
+        self.write(")")
+
 class Document(object):
     def __init__(self, identity=DEFAULT_IDENTITY, version=libvoitto.VERSION,
-            name="", begin=DEFAULT_BEGIN, end=DEFAULT_END, accounts=[],
-            events=[]):
+            name="", begin=DEFAULT_BEGIN, end=DEFAULT_END, accounts=None,
+            events=None):
         self.identity = identity
         self.version = version
         self.name = name
         self.begin = begin
         self.end = end
-        self.accounts = accounts
-        self.events = events 
+        self.accounts = accounts if accounts is not None else []
+        self.events = events if events is not None else []
 
 class Account(object):
-    def __init__(self, number=None, name="", subaccounts=[]):
+    def __init__(self, number=None, name="", subaccounts=None):
         self.number = number
         self.name = name
-        self.subaccounts = subaccounts
+        self.subaccounts = subaccounts if subaccounts is not None else []
 
 class Event(object):
-    def __init__(self, number, date, description="", entries=[]):
+    def __init__(self, number, date, description="", entries=None):
         self.number = number
         self.date = date
         self.description = description
-        self.entries = entries
+        self.entries = entries if entries is not None else []
 
 class Entry(object):
     def __init__(self, account_number, cents):

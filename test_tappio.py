@@ -20,6 +20,7 @@
 #
 
 from tappio import *
+from StringIO import StringIO
 
 SIMPLE_EXAMPLE = """
 (identity "Tappio" version "versio 0.22" finances (fiscal-year "test" (date 2010 1 1) (date 2010 12 31) (account-map (account -1 "Vastaavaa" ()) (account -1 "Vastattavaa" ()) (account -1 "Tulos" ())) ()))
@@ -182,13 +183,31 @@ def test_parser(input):
         print lex.linenum, lex.chnum
         raise e
 
+def test_writer(input):
+    good_tokens = list(Lexer().lex_string(input))
+    document = Parser(good_tokens).parse_document()
+
+    sio = StringIO()
+    Writer(stream=sio).write_document(document)
+
+    potentially_bad_tokens = list(Lexer().lex_string(sio.getvalue()))
+
+    fail_unless(good_tokens == potentially_bad_tokens,
+        "INPUT: {0}\nOUTPUT: {1}\nEXPECTED: {2}\nGOT: {3}\n".format(
+            input, sio.getvalue(), good_tokens, potentially_bad_tokens))
+
 def run_parser_tests():
     test_parser(SIMPLE_EXAMPLE)
     test_parser(COMPLEX_EXAMPLE)
 
+def run_writer_tests():
+    test_writer(SIMPLE_EXAMPLE)
+    test_writer(COMPLEX_EXAMPLE)
+
 def run_tests():
     run_lexer_tests()
     run_parser_tests()
+    run_writer_tests()
 
 if __name__ == "__main__":
     run_tests()
