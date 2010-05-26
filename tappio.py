@@ -46,7 +46,7 @@ class Writer(object):
         elif prev_token == ")" and token == "(":
             return True
         else:
-            return (prev_token not in ("(",")")) and (token != ")")
+            return (prev_token != "(") and (token != ")")
 
     def write_string(self, string):
         self.write('"' + self.escape_string(string) + '"')
@@ -98,11 +98,11 @@ class Writer(object):
         self.write("(", "account", account.number if account.number is not None else -1)
         self.write_string(account.name)
 
-        if account.subaccounts:
-            self.write("(")
-            for subaccount in account.subaccounts:
-                self.write_account(subaccount)
-            self.write(")")
+        #if account.subaccounts:
+        self.write("(")
+        for subaccount in account.subaccounts:
+            self.write_account(subaccount)
+        self.write(")")
 
         self.write(")")
 
