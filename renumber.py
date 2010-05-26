@@ -9,7 +9,7 @@ def sort_events(events):
     events.sort(key=lambda x: (x.date, x.number))
 
 def renumber_events(events, start=1):
-    for num, event in enumerate(events):
+    for num, event in enumerate(events, start):
         event.number = num
 
 def main(input_filename, output_filename):
