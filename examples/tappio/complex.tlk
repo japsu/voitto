@@ -1,0 +1,9 @@
+(identity "Tappio"
+ version "versio 0.10"
+ finances (fiscal-year "Esimerkkiyhdistys ery"
+                       (date 2003 1 1)
+                       (date 2003 12 31)
+                       (account-map (account -1 "Vastaavaa" ((account 101 "Pankkitili")))
+                                    (account -1 "Vastattavaa" ((account 201 "Oma p\xe4\xe4oma")))
+                                    (account -1 "Tulos" ((account 300 "Tulot") (account 400 "Menot"))))
+                       ((event 1 (date 2003 1 1) "Tilinavaus" ((101 (money 123456)) (201 (money -123456)))))))
