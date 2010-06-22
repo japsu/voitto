@@ -1,0 +1,23 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: "tlkmerge: a tool to merge two or more tlk files"
+desc: |-
+  A tool should be written to enable me to merge events and accounts from two
+  or more tlk files into one.
+type: :feature
+component: voitto
+release: 
+reporter: Santtu Pajukanta <santtu@pajukanta.fi>
+status: :unstarted
+disposition: 
+creation_time: 2010-06-22 21:42:14.680243 Z
+references: []
+
+id: abe6c18ae2603970a96b59c7d2ffc4c2524a17e2
+log_events: 
+- - 2010-06-22 21:43:29.307533 Z
+  - Santtu Pajukanta <santtu@pajukanta.fi>
+  - created
+  - |-
+    Possible syntax: tlkmerge.py file1.tlk file2.tlk ...
+    Files listed in descending order of importance. If file2.tlk has a different
+    name for an account than file1.tlk, file1.tlk takes precedence.
