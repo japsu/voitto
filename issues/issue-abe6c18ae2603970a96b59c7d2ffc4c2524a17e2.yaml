@@ -7,7 +7,7 @@ type: :feature
 component: voitto
 release: 
 reporter: Santtu Pajukanta <santtu@pajukanta.fi>
-status: :unstarted
+status: :in_progress
 disposition: 
 creation_time: 2010-06-22 21:42:14.680243 Z
 references: []
@@ -21,3 +21,7 @@ log_events:
     Possible syntax: tlkmerge.py file1.tlk file2.tlk ...
     Files listed in descending order of importance. If file2.tlk has a different
     name for an account than file1.tlk, file1.tlk takes precedence.
+- - 2010-06-22 21:45:23.833071 Z
+  - Santtu Pajukanta <santtu@pajukanta.fi>
+  - changed status from unstarted to in_progress
+  - ""
