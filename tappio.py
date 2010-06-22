@@ -507,3 +507,17 @@ class Parser(object):
         self.token("brace_close")
 
         return Entry(int(account_number), cents)
+
+def read(stream):
+    return Parser(Lexer().lex_file(stream)).parse_document()
+
+def write(stream, document):
+    Writer(stream).write_document(document)
+
+def read_file(filename):
+    with open(filename, "rb") as f:
+        return read(f)
+
+def write_file(filename, document):
+    with open(filename, "wb") as f:
+        write(f, document)

@@ -2,7 +2,7 @@
 # encoding: utf-8
 # vim: shiftwidth=4 expandtab
 
-from tappio import Lexer, Parser, Writer
+from tappio import read_file, write_file
 import sys
 
 def sort_events(events):
@@ -25,13 +25,11 @@ def renumber_events(events, start=1):
         event.number = num
 
 def main(input_filename, output_filename):
-    with open(input_filename, "rb") as input_file:
-        with open(output_filename, "wb") as output_file:
-            document = Parser(Lexer().lex_file(input_file)).parse_document()
-            sort_accounts(document.accounts)
-            sort_events(document.events)
-            renumber_events(document.events)
-            Writer(output_file).write_document(document)
+    document = read_file(input_filename)
+    sort_accounts(document.accounts)
+    sort_events(document.events)
+    renumber_events(document.events)
+    write_file(output_filename, document)
 
 if __name__ == "__main__":
     main(*sys.argv[1:])
