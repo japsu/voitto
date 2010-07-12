@@ -24,7 +24,7 @@ def renumber_events(events, start=1):
     for num, event in enumerate(events, start=start):
         event.number = num
 
-def main(input_filename, output_filename):
+def main(input_filename=None, output_filename=None):
     document = read_file(input_filename)
     sort_accounts(document.accounts)
     sort_events(document.events)
