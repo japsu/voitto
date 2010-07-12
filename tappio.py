@@ -27,18 +27,38 @@ DEFAULT_IDENTITY = "Tappio"
 DEFAULT_BEGIN = datetime.date(2010, 1, 1)
 DEFAULT_END = datetime.date(2010, 12, 31)
 
+DEFAULT_INDENT = "  "
+
 class Writer(object):
-    def __init__(self, stream=sys.stdout):
+    def __init__(self, stream=sys.stdout, pretty_print=False, indent=DEFAULT_INDENT):
         self.stream = stream
         self.prev_token = None
+        self.indent = indent
+        self.indent_depth = 0
+        self.pretty_print = pretty_print
+        self.new_line_queued = False
 
     def write(self, *tokens):
+        if self.new_line_queued:
+            self.actually_write_newline()
+
         for token in tokens:
             if self.should_put_space_between(self.prev_token, token):
                 self.stream.write(" ")
             self.stream.write(str(token))
 
             self.prev_token = token
+
+    def new_line(self, indent_increment=0):
+        self.indent_depth += indent_increment
+        self.new_line_queued = True
+
+    def actually_write_newline(self):
+        if self.pretty_print:
+            self.stream.write("\r\n")
+            self.stream.write(self.indent * self.indent_depth)
+            self.new_line_queued = False
+            self.prev_token = None
 
     def should_put_space_between(self, prev_token, token):
         if prev_token is None:
@@ -77,41 +97,64 @@ class Writer(object):
         self.write("version")
         self.write_string(document.version)
 
-        self.write("finances", "(", "fiscal-year")
+        self.write("finances")
+        self.new_line(1)
+
+        self.write("(", "fiscal-year")
         self.write_string(document.name)
 
         self.write_date(document.begin)
         self.write_date(document.end)
 
+        self.new_line(1)
         self.write_accounts(document.accounts)
+        self.new_line()
         self.write_events(document.events)
 
-        self.write(")", ")")
+        self.new_line(-1)
+        self.write(")")
+        self.new_line(-1)
+        self.write(")")
+
+        self.actually_write_newline()
+
+        assert self.indent_depth == 0
 
     def write_accounts(self, accounts):
         self.write("(", "account-map")
+        self.new_line(1)
         for account in accounts:
             self.write_account(account)
+            self.new_line()
+        self.new_line(-1)
         self.write(")")
 
     def write_account(self, account):
         self.write("(", "account", account.number if account.number is not None else -1)
         self.write_string(account.name)
 
-        #if account.subaccounts:
-        self.write("(")
-        for subaccount in account.subaccounts:
-            self.write_account(subaccount)
-        self.write(")")
+        if account.subaccounts:
+            self.write("(")
+            self.new_line(1)
+            for subaccount in account.subaccounts:
+                self.write_account(subaccount)
+                self.new_line()
+            self.new_line(-1)
+            self.write(")")
+        else:
+            self.write("(",")")
 
         self.write(")")
 
     def write_events(self, events):
         self.write("(")
+        self.new_line(1)
 
         for event in events:
             self.write_event(event)
+            self.new_line()
 
+        self.new_line(-1)
         self.write(")")
 
     def write_event(self, event):
@@ -123,9 +166,13 @@ class Writer(object):
 
     def write_entries(self, entries):
         self.write("(")
-        
-        for entry in entries:
-            self.write_entry(entry)
+
+        if entries:
+            self.new_line(1)
+            for entry in entries:
+                self.write_entry(entry)
+                self.new_line()
+            self.new_line(-1)
 
         self.write(")")
 
@@ -511,13 +558,19 @@ class Parser(object):
 def read(stream):
     return Parser(Lexer().lex_file(stream)).parse_document()
 
-def write(stream, document):
-    Writer(stream).write_document(document)
+def write(stream, document, **kwargs):
+    Writer(stream, **kwargs).write_document(document)
 
 def read_file(filename):
-    with open(filename, "rb") as f:
-        return read(f)
+    if filename is None:
+        return read(sys.stdin)
+    else:
+        with open(filename, "rb") as f:
+            return read(f)
 
-def write_file(filename, document):
-    with open(filename, "wb") as f:
-        write(f, document)
+def write_file(filename, document, **kwargs):
+    if filename is None:
+        return write(sys.stdout, document, **kwargs)
+    else:
+        with open(filename, "wb") as f:
+            write(f, document, **kwargs)
