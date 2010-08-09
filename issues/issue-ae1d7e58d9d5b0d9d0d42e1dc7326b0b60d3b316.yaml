@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: The [assets, liabilities, earnings] SNAFU
+desc: Different types of accounts (assets, liabilities and earnings) are stored in a tree/subaccount tree whose root is a list with three items. The first is assets, the second is liabilities and the third is earnings. This is very confusing and originates in the way Tappio stores the stuff in its file format.
+type: :task
+component: voitto
+release: 
+reporter: Santtu Pajukanta <santtu@pajukanta.fi>
+status: :unstarted
+disposition: 
+creation_time: 2010-08-09 11:01:28.757210 Z
+references: []
+
+id: ae1d7e58d9d5b0d9d0d42e1dc7326b0b60d3b316
+log_events: 
+- - 2010-08-09 11:01:30.128093 Z
+  - Santtu Pajukanta <santtu@pajukanta.fi>
+  - created
+  - ""
