@@ -17,8 +17,8 @@ Windows. For more information about Tappio, see
 Current utilities:
 
 extract.py - extract a period of time from a TLK file (with opening balances)
-indent.py - a Tappio pretty-printer, useful for "git diff"
 graph.py - print a totally useless GrahpViz graph of money flows
+indent.py - a Tappio pretty-printer, useful for "git diff" (see below)
 print_accounts.py - print the account tree
 print_earnings.py - print incomes and expenses in CSV for nice pie graphs
 renumber.py - sort and renumber events by date
@@ -27,3 +27,18 @@ tlkmerge.py - merge two or more TLK files
 Tests:
 
 test_tappio.py - test the Tappio input/output features (test currently broken)
+
+
+
+Using indent.py as a pretty-printer for "git diff":
+
+In ~/.gitconfig, add this:
+
+[diff "tappio"]
+textconv = /path/to/voitto/indent.py
+
+In the .gitattributes of your git repository, add this:
+
+*.tlk diff=tappio
+
+Now "git diff" should use indent.py for pretty printing.
