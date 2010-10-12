@@ -7,8 +7,8 @@ type: :feature
 component: voitto
 release: 
 reporter: Santtu Pajukanta <santtu@pajukanta.fi>
-status: :in_progress
-disposition: 
+status: :closed
+disposition: :fixed
 creation_time: 2010-06-22 21:42:14.680243 Z
 references: []
 
@@ -25,3 +25,7 @@ log_events:
   - Santtu Pajukanta <santtu@pajukanta.fi>
   - changed status from unstarted to in_progress
   - ""
+- - 2010-10-12 09:09:07.963828 Z
+  - Santtu Pajukanta <santtu@pajukanta.fi>
+  - closed with disposition fixed
+  - Some rough edges remain, but there is now a tlkmerge tool that works for me.
