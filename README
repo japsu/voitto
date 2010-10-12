@@ -18,9 +18,11 @@ Current utilities:
 
 extract.py - extract a period of time from a TLK file (with opening balances)
 indent.py - a Tappio pretty-printer, useful for "git diff"
+graph.py - print a totally useless GrahpViz graph of money flows
 print_accounts.py - print the account tree
 print_earnings.py - print incomes and expenses in CSV for nice pie graphs
 renumber.py - sort and renumber events by date
+tlkmerge.py - merge two or more TLK files
 
 Tests:
 
