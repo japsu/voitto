@@ -23,6 +23,7 @@ print_accounts.py - print the account tree
 print_earnings.py - print incomes and expenses in CSV for nice pie graphs
 renumber.py - sort and renumber events by date
 tlkmerge.py - merge two or more TLK files
+move_entries.py - all entries from one account number to another
 
 Tests:
 
