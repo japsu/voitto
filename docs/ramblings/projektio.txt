@@ -1,0 +1,16 @@
+2010-12-12 16:22:34 <&Japsu> Nyt tulee kyl semmosta Excel-hackeryä että pitäisköhän tässä käyttää oikeeta ohjelmointikieltä mieluummin
+2010-12-12 16:24:00 <&Japsu> Ongelma: Mulla on monimutkainen taulukko, jossa on sarakkeet "Tilanne" ja "Päivämäärä" mutta eivät peräkkäin tässä järjestyksessä
+2010-12-12 16:24:39 <&Japsu> Mun pitäis kalastaa sieltä Tilanne-sarakkeen minimi sekä ensimmäinen päivämäärä jona em. minimi esiintyy
+2010-12-12 16:25:00 <&Japsu> Tai oikeastaan viimeinen, mutta se voi olla jo mahdotonta.
+2010-12-12 16:25:18 <&Japsu> Excelissä on semmonen funktio ku VLOOKUP joka tekee lookupin yksinkertaisesta kaksisarakkeisesta taulusta
+2010-12-12 16:25:27 <&Japsu> jossa eka sarake on key ja toinen sarake value
+2010-12-12 16:25:34 <&Japsu> no prob, tehdään piilotettu aputaulukko
+2010-12-12 16:25:41 <&Japsu> mut... tää sanoo edelleen #N/A ;(((((
+2010-12-12 16:26:42 <&Japsu> pitääkö tässä nyt ruveta vääntämään VBA:ta
+2010-12-12 16:28:56 <&Japsu> Olennaisesti teen siis semmosta yksinkertaista rahankäytön suunnittelutyökalua johon syötän tulevat tiedossa olevat menot ja tulot ja se kertoo mulle, että paljonko on ns. kulutusvaraa eli rahaa tileillä sillä hetkellä kun sitä on vähiten, ja sit halusin siihen päivämäärän jona toi minimi realisoituu
+2010-12-12 16:29:38 <&Japsu> ja tätä olisi tarkoitus käyttää päätöksenteon tukena, esim.
+2010-12-12 16:29:52 <&Japsu> - onko mulla rahaa tehdä X-suuruinen hankinta ja milloin
+2010-12-12 16:30:06 <&Japsu> - tarviiko mun lunastaa rahasto-osuuksia hankintoja varten / elämiseen ja milloin
+2010-12-12 16:30:16 <&Japsu> - onko mulla ylimääräistä rahaa jonka voisi tunkea rahastoihin ja milloin
+2010-12-12 16:31:02 <&Japsu> Tän ongelman luonnollisesti ratkaisisi myös sellainen kirjanpito-ohjelmisto joka tukisi järkevästi tulevaisuuteen asetettavia tilitapahtumia
+2010-12-12 16:32:08 <&Japsu> ts. ne voisi flägätä "suunniteltu mutta ei vielä oikeasti toteutunut" ja valita, minkä päivän mukainen tilanne näytetään tuloslaskelmassa ja taseessa (oletuksena tämä päivä)
