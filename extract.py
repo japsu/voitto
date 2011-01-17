@@ -14,7 +14,8 @@ DATE_FORMAT = "%Y-%m-%d"
 
 def get_balance_accounts(accounts):
     stack = list()
-    stack.extend(accounts[:1])
+    # (vastaavaa, vastattavaa, tulos)
+    stack.extend(accounts[:2])
     result = set()
 
     while stack:
