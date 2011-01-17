@@ -2,7 +2,7 @@
 # encoding: utf-8
 # vim: shiftwidth=4 expandtab
 
-from tappio import Lexer, Parser, Writer
+from tappio import Document, read_file, write_file
 import sys
 
 def combine_accounts(earliers, laters):
@@ -20,6 +20,7 @@ def merge_two(earlier, later):
     d.end = max(earlier.end, later.end)
     d.accounts = combine_accounts(earlier.accounts, later.accounts)
     d.events = combine_events(earlier.events, later.events)
+    return d
 
 def merge(*documents):
     return reduce(merge_two, documents)
