@@ -458,7 +458,7 @@ class Parser(object):
 
         self.token("brace_close")
 
-        return datetime.date(int(year), int(month), int(day))
+        return datetime.datetime(int(year), int(month), int(day))
 
     def parse_money(self):
         self.token("brace_open")
