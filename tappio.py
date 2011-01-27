@@ -24,8 +24,8 @@ import libvoitto
 
 
 DEFAULT_IDENTITY = "Tappio"
-DEFAULT_BEGIN = datetime.date(2010, 1, 1)
-DEFAULT_END = datetime.date(2010, 12, 31)
+DEFAULT_BEGIN = datetime.datetime(2010, 1, 1)
+DEFAULT_END = datetime.datetime(2010, 12, 31)
 
 DEFAULT_INDENT = "  "
 
