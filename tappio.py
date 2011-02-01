@@ -18,10 +18,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from __future__ import with_statement
+
 import datetime
 import sys
 import libvoitto
-
 
 DEFAULT_IDENTITY = "Tappio"
 DEFAULT_BEGIN = datetime.date(2010, 1, 1)
@@ -241,14 +242,14 @@ WHITESPACE = " \t\r\n"
 
 class Token(object):
     def __init__(self, token_type, value=None):
-        assert token_type in TOKENS, "Invalid token: {0}".format(token_type)
+        assert token_type in TOKENS, "Invalid token: %s" % (token_type)
         self.token_type = token_type
         self.value = value
 
     def __repr__(self):
         token_type = getattr(self, "token_type", None)
         value = repr(getattr(self, "value", None))
-        return "<Token: {0} {1}>".format(token_type, value)
+        return "<Token: %s %s>" % (token_type, value)
 
     def __eq__(self, other):
         return self.token_type == other.token_type and self.value == other.value
@@ -296,11 +297,11 @@ class Lexer(object):
         for tok in self.feed(' '):
             yield tok
         if self.state != "generic":
-            raise LexerError("eof in {0}".format(self.state))
+            raise LexerError("eof in %s" % (self.state))
 
     def expect(self, ch, expected_ch):
         if ch != expected_ch:
-            raise LexerError("expected {0}, got {1}".format(repr(expected_ch), repr(ch)))
+            raise LexerError("expected %s, got %s" % (repr(expected_ch), repr(ch)))
 
     def enter(self, state):
         self.state = state
@@ -325,7 +326,7 @@ class Lexer(object):
         elif ch == '"':
             self.string_start(ch)
         else:
-            raise LexerError("unexpected {0} in generic".format(repr(ch)))
+            raise LexerError("unexpected %s in generic" % (repr(ch)))
         
     def integer_negative(self, ch):
         self.enter("integer")
@@ -383,7 +384,7 @@ class Parser(object):
         self.next_token = None
 
     def error(self, message, *args, **kwargs):
-        raise ParserError(message.format(*args, **kwargs))
+        raise ParserError(message % args)
 
     def token(self, expected_type=None, expected_value=None):
         if self.next_token is not None:
@@ -393,13 +394,13 @@ class Parser(object):
             try:
                 token = self.token_iterator.next()
             except StopIteration:
-                self.error("end of file while expecting {0}", expected_type)
+                self.error("end of file while expecting %s", expected_type)
 
         if expected_type is not None and expected_type != token.token_type:
-            self.error("expected {0}, got {1}", expected_type, token.token_type)
+            self.error("expected %s, got %s", expected_type, token.token_type)
 
         if expected_value is not None and expected_value != token.value:
-            self.error("{0}: expected {1}, got {2}", token_type, expected_value, token.value)
+            self.error("%s: expected %s, got %s", token_type, expected_value, token.value)
 
         return token.token_type, token.value
 
@@ -485,7 +486,7 @@ class Parser(object):
         unused, account_number = self.token("integer")
         account_number = int(account_number)
         if account_number < -1:
-            self.error("invalid account number: {0}", account_number)
+            self.error("invalid account number: %s", account_number)
         elif account_number == -1:
             # Account group
             account_number = None

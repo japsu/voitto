@@ -2,6 +2,8 @@
 # encoding: utf-8
 # vim: shiftwidth=4 expandtab
 
+from __future__ import with_statement
+
 from tappio import read_file
 from contextlib import contextmanager
 import sys
@@ -10,8 +12,8 @@ import sys
 
 GRAPH_HEADER = "digraph X {\n"
 GRAPH_FOOTER = "}\n"
-NODE_TEMPLATE = "{0} {1}"
-EDGE_TEMPLATE = '\t"{0}" -> "{1}";\n'
+NODE_TEMPLATE = "%s %s"
+EDGE_TEMPLATE = '\t"%s" -> "%s";\n'
 
 def flatten_accounts(accounts):
     result = dict()
@@ -32,7 +34,7 @@ def print_graph(edges, stream=sys.stdout):
     stream.write(GRAPH_HEADER)
     
     for from_node, to_node in edges:
-        stream.write(EDGE_TEMPLATE.format(from_node, to_node))
+        stream.write(EDGE_TEMPLATE % (from_node, to_node))
 
     stream.write(GRAPH_FOOTER)
 
@@ -50,10 +52,10 @@ def construct_graph(events, flat_accounts):
                 debet_accounts.add(entry.account_number)
 
         for kredit_account in kredit_accounts:
-            kredit_node = NODE_TEMPLATE.format(kredit_account, flat_accounts[kredit_account])
+            kredit_node = NODE_TEMPLATE % (kredit_account, flat_accounts[kredit_account])
 
             for debet_account in debet_accounts:
-                debet_node = NODE_TEMPLATE.format(debet_account, flat_accounts[debet_account])
+                debet_node = NODE_TEMPLATE % (debet_account, flat_accounts[debet_account])
 
                 edges.add((kredit_node, debet_node))
                 
