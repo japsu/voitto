@@ -7,6 +7,9 @@ def read(fname):
     with open(os.path.join(os.path.dirname(__file__), fname)) as f:
         return f.read()
 
+def requirements(fname):
+    return [i for i in read(fname).splitlines() if not i.startswith('#')]
+
 setup(
     name='voitto',
     version='0.0.1',
@@ -44,6 +47,7 @@ Topic :: Office/Business :: Financial :: Accounting
             'tappio-renumber = tappio.scripts.renumber:main',
         ]
     },
-    tests_require=["nose"],
+    install_requires=requirements('requirements.txt'),
+    tests_require=requirements('test-requirements.txt'),
     test_suite="nose.collector",
 )
