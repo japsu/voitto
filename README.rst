@@ -16,6 +16,8 @@ operation (in the DVCS sense). Some "web 2.0" features (e-invoices/social debt
 tracking via a REST API) are also being planned.
 
 
+
+
 Tappio utilities
 ================
 
@@ -35,6 +37,19 @@ Current utilities in descending order of usefulness:
 * tappio-print-accounts - print the account tree
 * tappio-print-earnings - print incomes and expenses in CSV for nice pie graphs
 * tappio-graph - print a totally useless GrahpViz graph of money flows
+
+The utilities *generally* accept an input file as the first argument and
+an output file as the second argument, with the notable exception of tappio-merge,
+which takes an *output* file as the first argument and any number of input files
+as the rest. Better documentation pending, so UTSL for the time being (and please
+take backups of your .tlk files before overwriting them with Voitto!).
+
+And BTW, it's safe to do this (as long as you have backups)::
+
+    tappio-renumber old.tlk old.tlk
+
+The whole file is read in first, then transmogrified and only then written out,
+so this isn't like shell redirections where you'd end up with an empty old.tlk.
 
 
 Using indent.py as a pretty-printer for "git diff"
