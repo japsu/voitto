@@ -49,7 +49,7 @@ class Account(Document, BasicMetaMixin):
                 'fields': ['number'],
                 'unique': True,
                 'sparse': True,
-#                'types': False,
+                'types': False,
             },
         ],
     }
