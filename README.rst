@@ -16,7 +16,11 @@ operation (in the DVCS sense). Some "web 2.0" features (e-invoices/social debt
 tracking via a REST API) are also being planned.
 
 
+Installation
+============
 
+::
+    pip install voitto
 
 Tappio utilities
 ================
