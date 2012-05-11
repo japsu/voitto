@@ -3,7 +3,8 @@
 # vim: shiftwidth=4 expandtab
 
 
-from tappio import Document, loadf, dumpf
+from tappio import loadf, dumpf
+from tappio.models import Document
 
 
 def combine_accounts(earliers, laters):

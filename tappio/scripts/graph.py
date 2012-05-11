@@ -5,9 +5,11 @@
 # TODO: Escape stuff
 
 
-from tappio import loadf
+import sys
 from contextlib import contextmanager
 
+from tappio import loadf
+from voitto.helpers.io import output_stream
 
 GRAPH_HEADER = "digraph X {\n"
 GRAPH_FOOTER = "}\n"
@@ -63,16 +65,6 @@ def construct_graph(events, flat_accounts):
                 edges.add((kredit_node, debet_node))
                 
     return edges
-
-
-# TODO move this elsewhere
-@contextmanager
-def output_stream(output_filename=None, default_stream=sys.stdout, write_mode='wb'):
-    if output_filename is None:
-        yield default_stream
-    else:
-        with open(output_filename, write_mode) as f:
-            yield f
 
 
 def graph(input_filename=None, output_filename=None):

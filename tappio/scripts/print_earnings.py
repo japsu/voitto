@@ -3,10 +3,12 @@
 # vim: shiftwidth=4 expandtab
 
 
-from tappio import loadf
+import sys
+
 from csv import writer
 from collections import defaultdict
 
+from tappio import loadf
 
 def format_money(cents):
     cents = -cents
@@ -36,13 +38,17 @@ def collect_earnings(events):
     return earnings
 
 
-def main():
-    from sys import argv
+def print_earnings_util(input_filename=None, output_filename=None):
     input_filename = argv[1] if len(argv) >= 2 else None
 
     document = loadf(input_filename)
     earnings = collect_earnings(document.events)
-    print_earnings(document.accounts[2], earnings)
+
+    with output_stream(output_filename) as out:
+        print_earnings(document.accounts[2], earnings, out)
+
+def main():
+    print_earnings_util(*sys.argv[1:])
 
 if __name__ == "__main__":
     main()

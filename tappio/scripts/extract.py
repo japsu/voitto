@@ -2,11 +2,12 @@
 # encoding: utf-8
 # vim: shiftwidth=4 expandtab
 
-
-from tappio import loadf, dumpf, Event, Entry
-from print_earnings import collect_earnings
-
 from datetime import date, datetime
+
+from tappio import loadf, dumpf
+from tappio.models import Event, Entry
+
+from .print_earnings import collect_earnings
 
 
 BALANCES_DEFAULT_DESCRIPTION = "Tilinavaukset"
