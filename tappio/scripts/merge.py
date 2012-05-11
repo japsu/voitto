@@ -2,15 +2,18 @@
 # encoding: utf-8
 # vim: shiftwidth=4 expandtab
 
-from tappio import Document, read_file, write_file
-import sys
+
+from tappio import Document, loadf, dumpf
+
 
 def combine_accounts(earliers, laters):
     # XXX Seriously fugly hack, do this properly
     return laters
 
+
 def combine_events(earliers, laters):
     return earliers + laters
+
 
 def merge_two(earlier, later):
     d = Document()
@@ -22,13 +25,21 @@ def merge_two(earlier, later):
     d.events = combine_events(earlier.events, later.events)
     return d
 
+
 def merge(*documents):
     return reduce(merge_two, documents)
 
-def main(output_filename, *input_filenames):
-    documents = (read_file(filename) for filename in input_filenames)
+
+def merge_files(output_filename, *input_filenames):
+    documents = (loadf(filename) for filename in input_filenames)
     merged = merge(*documents)
-    write_file(output_filename, merged)
+    dumpf(output_filename, merged)
+
+
+def main():
+    from sys import argv
+    merge_files(*argv[1:])
+
 
 if __name__ == "__main__":
-    main(*sys.argv[1:])
+    main()

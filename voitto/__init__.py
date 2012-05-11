@@ -18,4 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-VERSION = "Voitto 0.0.0+dev"
+import pkg_resources
+
+__version__ = pkg_resources.get_distribution('voitto').version
+

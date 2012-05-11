@@ -2,15 +2,17 @@
 # encoding: utf-8
 # vim: shiftwidth=4 expandtab
 
-from tappio import read_file, write_file, Event, Entry
+
+from tappio import loadf, dumpf, Event, Entry
 from print_earnings import collect_earnings
 
 from datetime import date, datetime
-import sys
+
 
 BALANCES_DEFAULT_DESCRIPTION = "Tilinavaukset"
 BALANCES_DEFAULT_NUMBER = 0
 DATE_FORMAT = "%Y-%m-%d"
+
 
 def get_balance_accounts(accounts):
     stack = list()
@@ -28,7 +30,9 @@ def get_balance_accounts(accounts):
 
     return result
 
-def balances(document, at_date=None, description=BALANCES_DEFAULT_DESCRIPTION, number=BALANCES_DEFAULT_NUMBER):
+
+def balances(document, at_date=None, description=BALANCES_DEFAULT_DESCRIPTION,
+        number=BALANCES_DEFAULT_NUMBER):
     if at_date is None:
         at_date = date.today()
 
@@ -42,23 +46,27 @@ def balances(document, at_date=None, description=BALANCES_DEFAULT_DESCRIPTION, n
 
     return result
 
+
 def drop_extra_events(document, from_date, to_date):
-    relevant_events = [i for i in document.events if i.date >= from_date and i.date <= to_date]
+    relevant_events = [i for i in document.events if i.date >= from_date
+        and i.date <= to_date]
 
     document.events = relevant_events
+
 
 def inject_balances(document, at_date):
     balances_event = balances(document, at_date)
     document.events.insert(0, balances_event)
 
-def main(from_date_str, to_date_str, input_filename=None, output_filename=None):
+
+def extract(from_date_str, to_date_str, input_filename=None, output_filename=None):
     from_date = datetime.strptime(from_date_str, DATE_FORMAT).date()
     to_date = datetime.strptime(to_date_str, DATE_FORMAT).date()
 
     if from_date > to_date:
         raise ValueError("from_date > to_date")
 
-    document = read_file(input_filename)
+    document = loadf(input_filename)
 
     inject_balances(document, from_date)
     drop_extra_events(document, from_date, to_date)
@@ -66,7 +74,13 @@ def main(from_date_str, to_date_str, input_filename=None, output_filename=None):
     document.begin = from_date
     document.end = to_date
 
-    write_file(output_filename, document)
+    dumpf(output_filename, document)
+
+
+def main():
+    from sys import argv
+    extract(*argv[1:])
+
 
 if __name__ == "__main__":
-    main(*sys.argv[1:])
+    main()    

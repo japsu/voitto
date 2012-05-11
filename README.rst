@@ -1,0 +1,45 @@
+Voitto - a simple yet efficient double ledger bookkeeping system
+Copyright (C) 2010 Santtu Pajukanta <santtu@pajukanta.fi>
+
+Voitto is licensed under the GNU General Public License, version 3 or later.
+See the file COPYING.GPLv3 for the complete license.
+
+My long term vision is to make a bookkeeping system that supports distributed
+operation (in the DVCS sense). Some "web 2.0" features (e-invoices/social debt
+tracking via a REST API) are also being planned.
+
+At the moment Voitto only consists of a small collection of tools to work
+with Tappio, a simple closed-source freeware bookkeeping application for
+Windows. For more information about Tappio, see
+
+    http://www.lahdenniemi.fi/jussi/tappio/
+
+Current utilities: (TODO pending rewrite into setuptools entry points)
+
+* extract.py - extract a period of time from a TLK file (with opening balances)
+* graph.py - print a totally useless GrahpViz graph of money flows
+* indent.py - a Tappio pretty-printer, useful for "git diff" (see below)
+* print_accounts.py - print the account tree
+* print_earnings.py - print incomes and expenses in CSV for nice pie graphs
+* renumber.py - sort and renumber events by date
+* tlkmerge.py - merge two or more TLK files
+* move_entries.py - all entries from one account number to another
+* missingacct.py - print accounts that are in some but not all input files
+
+Tests:
+
+* TBD
+
+Using indent.py as a pretty-printer for "git diff"
+==================================================
+
+In ~/.gitconfig, add this::
+
+    [diff "tappio"]
+    textconv = /path/to/voitto/indent.py
+
+In the .gitattributes of your git repository, add this::
+
+    *.tlk diff=tappio
+
+Now "git diff" should use indent.py for pretty printing.

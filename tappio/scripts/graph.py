@@ -1,17 +1,19 @@
 #!/usr/bin/env python
 # encoding: utf-8
 # vim: shiftwidth=4 expandtab
-
-from tappio import read_file
-from contextlib import contextmanager
-import sys
-
+#
 # TODO: Escape stuff
+
+
+from tappio import loadf
+from contextlib import contextmanager
+
 
 GRAPH_HEADER = "digraph X {\n"
 GRAPH_FOOTER = "}\n"
 NODE_TEMPLATE = "{0} {1}"
 EDGE_TEMPLATE = '\t"{0}" -> "{1}";\n'
+
 
 def flatten_accounts(accounts):
     result = dict()
@@ -21,12 +23,14 @@ def flatten_accounts(accounts):
 
     return result
 
+
 def recursively_flatten_account(account, flat_accounts={}):
     if account.number is not None:
         flat_accounts[account.number] = account.name
 
     for subaccount in account.subaccounts:
         recursively_flatten_account(subaccount, flat_accounts)
+
 
 def print_graph(edges, stream=sys.stdout):
     stream.write(GRAPH_HEADER)
@@ -35,6 +39,7 @@ def print_graph(edges, stream=sys.stdout):
         stream.write(EDGE_TEMPLATE.format(from_node, to_node))
 
     stream.write(GRAPH_FOOTER)
+
 
 def construct_graph(events, flat_accounts):
     edges = set()
@@ -59,6 +64,7 @@ def construct_graph(events, flat_accounts):
                 
     return edges
 
+
 # TODO move this elsewhere
 @contextmanager
 def output_stream(output_filename=None, default_stream=sys.stdout, write_mode='wb'):
@@ -68,13 +74,19 @@ def output_stream(output_filename=None, default_stream=sys.stdout, write_mode='w
         with open(output_filename, write_mode) as f:
             yield f
 
-def main(input_filename=None, output_filename=None):
-    document = read_file(input_filename)
+
+def graph(input_filename=None, output_filename=None):
+    document = loadf(input_filename)
     flat_accounts = flatten_accounts(document.accounts)
     edges = construct_graph(document.events, flat_accounts)    
 
     with output_stream(output_filename) as stream:
         print_graph(edges, stream)
 
+
+def main():
+    from sys import argv
+    graph(*argv[1:])
+
 if __name__ == "__main__":
-    main(*sys.argv[1:])
+    main()

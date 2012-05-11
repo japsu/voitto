@@ -561,14 +561,14 @@ def read(stream):
 def write(stream, document, **kwargs):
     Writer(stream, **kwargs).write_document(document)
 
-def read_file(filename):
+def loadf(filename):
     if filename is None:
         return read(sys.stdin)
     else:
         with open(filename, "rb") as f:
             return read(f)
 
-def write_file(filename, document, **kwargs):
+def dumpf(filename, document, **kwargs):
     if filename is None:
         return write(sys.stdout, document, **kwargs)
     else:

@@ -2,11 +2,13 @@
 # encoding: utf-8
 # vim: shiftwidth=4 expandtab
 
+
 from collections import defaultdict
-from tappio import read_file, write_file
-import sys
+from tappio import loadf, dumpf
+
 
 ONLY=True
+
 
 def flatten_accounts(accounts):
     flat_accounts = dict()
@@ -16,16 +18,18 @@ def flatten_accounts(accounts):
 
     return flat_accounts
 
+
 def _flatten_accounts(account, accounts):
     accounts[account.number] = account
 
     for subaccount in account.subaccounts:
         _flatten_accounts(subaccount, accounts)
 
-def main(*input_filenames):
+
+def missing_accounts(*input_filenames):
     input_filenames = set(input_filenames)
 
-    documents = ((filename, read_file(filename)) for filename in input_filenames)
+    documents = ((filename, loadf(filename)) for filename in input_filenames)
     flat_accounts = dict((filename, flatten_accounts(document.accounts)) for (filename, document) in documents)
 
     all_accounts = dict()
@@ -47,6 +51,10 @@ def main(*input_filenames):
             print "{account_num}: ONLY {fmt_filenames}".format(**locals())
             
 
+def main():
+    from sys import argv
+    missing_accounts(*argv[1:])
+
 
 if __name__ == "__main__":
-    main(*sys.argv[1:])
+    main()
