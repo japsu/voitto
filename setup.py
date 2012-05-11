@@ -11,7 +11,7 @@ setup(
     name='voitto',
     version='0.0.1',
     description='A simple yet efficient double ledger',
-    long_description=read('README.rst'),
+    long_description=read('README.txt'),
     license='GPLv3+',
     author='Santtu Pajukanta',
     author_email='santtu@pajukanta.fi',
