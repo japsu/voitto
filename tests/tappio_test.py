@@ -19,8 +19,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from tappio import *
+
 from StringIO import StringIO
+
+from nose.tools import *
+
+from tappio.lexer import Lexer, LexerError
+from tappio.writer import Writer
+from tappio.parser import Parser, ParserError
 
 SIMPLE_EXAMPLE = """
 (identity "Tappio" version "versio 0.22" finances (fiscal-year "test" (date 2010 1 1) (date 2010 12 31) (account-map (account -1 "Vastaavaa" ()) (account -1 "Vastattavaa" ()) (account -1 "Tulos" ())) ()))
@@ -39,46 +45,20 @@ COMPLEX_EXAMPLE = """
                        ((event 1 (date 2003 1 1) "Tilinavaus" ((101 (money 123456)) (201 (money -123456)))))))
 """
 
-class TestFailure(RuntimeError):
-    pass
+def lexer_single(input, expected_tokens):
+    tokens = list(Lexer().lex_string(input))
+    assert_equal(expected_tokens, tokens)
 
-def fail_on(condition, message):
-    if condition:
-        raise TestFailure(message)
-
-def fail_unless(condition, message):
-    fail_on(not condition, message)
-
-def test_lexer(input_string, expected_tokens):
-    lex = Lexer()
-    expected_tokens = [Token(*tup) for tup in expected_tokens]
-    tokens = list(lex.lex_string(input_string))
-
-    fail_unless(tokens == expected_tokens, "INPUT: {0}\nEXPECTED: {1}\nGOT: {2}".format(
-        repr(input_string),
-        repr(expected_tokens),
-        repr(tokens)
-    ))
-
-def test_lexer_error(input_string):
-    try:
-        lex = Lexer()
-        tokens = list(lex.lex_string(input_string))
-    except LexerError:
-        return
-
-    raise TestFailure("INPUT: {0}\nEXPECTED ERROR\nGOT: {1}".format(repr(input_string), repr(tokens)))
-
-def run_lexer_tests():
+def lexer_test():
     # integer tests
-    test_lexer("101", [("integer", "101")])
-    test_lexer("-1252", [("integer", "-1252")])
-    test_lexer("101 102 103", [("integer", "101"), ("integer", "102"), ("integer", "103")])
-    test_lexer("102-102", [("integer", "102"), ("integer", "-102")])
+    lexer_single("101", [("integer", "101")])
+    lexer_single("-1252", [("integer", "-1252")])
+    lexer_single("101 102 103", [("integer", "101"), ("integer", "102"), ("integer", "103")])
+    lexer_single("102-102", [("integer", "102"), ("integer", "-102")])
 
     # symbol tests
-    test_lexer("foobar", [("symbol", "foobar")])
-    test_lexer("identity version finances fiscal-year account event date money", [
+    lexer_single("foobar", [("symbol", "foobar")])
+    lexer_single("identity version finances fiscal-year account event date money", [
         ("symbol", "identity"),
         ("symbol", "version"),
         ("symbol", "finances"),
@@ -90,13 +70,16 @@ def run_lexer_tests():
     ])
 
     # string tests
-    test_lexer('"foobar"', [("string", "foobar")])
-    test_lexer_error('"foobar')
-    test_lexer(r'"foo\"bar"', [("string", 'foo"bar')])
-    test_lexer(r'"foo\\bar"', [("string", r'foo\bar')])
+    lexer_single('"foobar"', [("string", "foobar")])
+
+    with assert_raises(LexerError):
+        lexer_single('"foobar', [])
+
+    lexer_single(r'"foo\"bar"', [("string", 'foo"bar')])
+    lexer_single(r'"foo\\bar"', [("string", r'foo\bar')])
 
     # complex tests
-    test_lexer(COMPLEX_EXAMPLE, [
+    lexer_single(COMPLEX_EXAMPLE, [
         # (identity "Tappio" version "versio 0.10" finances (
         ('brace_open', ''),
         ('symbol', 'identity'), ('string', 'Tappio'),
@@ -174,7 +157,7 @@ def run_lexer_tests():
         ('brace_close', ''), ('brace_close', ''), ('brace_close', ''),
     ])  
 
-def test_parser(input):
+def parser_single(input):
     lex = Lexer()
 
     try:
@@ -183,7 +166,7 @@ def test_parser(input):
         print lex.linenum, lex.chnum
         raise e
 
-def test_writer(input):
+def writer_single(input):
     good_tokens = list(Lexer().lex_string(input))
     document = Parser(good_tokens).parse_document()
 
@@ -192,22 +175,12 @@ def test_writer(input):
 
     potentially_bad_tokens = list(Lexer().lex_string(sio.getvalue()))
 
-    fail_unless(good_tokens == potentially_bad_tokens,
-        "INPUT: {0}\nOUTPUT: {1}\nEXPECTED: {2}\nGOT: {3}\n".format(
-            input, sio.getvalue(), good_tokens, potentially_bad_tokens))
+    assert_equal(good_tokens, potentially_bad_tokens)
 
-def run_parser_tests():
-    test_parser(SIMPLE_EXAMPLE)
-    test_parser(COMPLEX_EXAMPLE)
+def parser_test():
+    parser_single(SIMPLE_EXAMPLE)
+    parser_single(COMPLEX_EXAMPLE)
 
-def run_writer_tests():
-    test_writer(SIMPLE_EXAMPLE)
-    test_writer(COMPLEX_EXAMPLE)
-
-def run_tests():
-    run_lexer_tests()
-    run_parser_tests()
-    run_writer_tests()
-
-if __name__ == "__main__":
-    run_tests()
+def writer_test():
+    writer_single(SIMPLE_EXAMPLE)
+    writer_single(COMPLEX_EXAMPLE)

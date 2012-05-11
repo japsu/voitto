@@ -44,4 +44,6 @@ Topic :: Office/Business :: Financial :: Accounting
             'tappio-renumber = tappio.scripts.renumber:main',
         ]
     },
+    tests_require=["nose"],
+    test_suite="nose.collector",
 )
