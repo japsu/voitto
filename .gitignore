@@ -1,4 +1,6 @@
 *.swp
 *.pyc
 *.egg-info
+*,cover
+.coverage
 dist/
