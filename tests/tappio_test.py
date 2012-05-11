@@ -28,6 +28,8 @@ from tappio.lexer import Lexer, LexerError
 from tappio.writer import Writer
 from tappio.parser import Parser, ParserError
 
+from .helpers import skipped
+
 SIMPLE_EXAMPLE = """
 (identity "Tappio" version "versio 0.22" finances (fiscal-year "test" (date 2010 1 1) (date 2010 12 31) (account-map (account -1 "Vastaavaa" ()) (account -1 "Vastattavaa" ()) (account -1 "Tulos" ())) ()))
 """
@@ -180,6 +182,7 @@ def parser_test():
     parser_single(SIMPLE_EXAMPLE)
     parser_single(COMPLEX_EXAMPLE)
 
+@skipped
 def writer_test():
     writer_single(SIMPLE_EXAMPLE)
     writer_single(COMPLEX_EXAMPLE)
