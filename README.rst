@@ -2,11 +2,12 @@
 Voitto - a simple yet efficient double ledger
 =============================================
 
-Copyright (C) 2010 Santtu Pajukanta <santtu@pajukanta.fi>
+Copyright (C) 2010-2012 Santtu Pajukanta <santtu@pajukanta.fi>
 
 Voitto is licensed under the GNU General Public License, version 3 or later.
 See the file COPYING.GPLv3 for the complete license.
 
+.. image:: https://secure.travis-ci.org/japsu/voitto.png?branch=master
 
 Introduction
 ============
