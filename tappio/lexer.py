@@ -61,8 +61,13 @@ class Token(object):
         value = repr(getattr(self, "value", None))
         return "<Token: {0} {1}>".format(token_type, value)
 
-    def __eq__(self, other):
-        return self.token_type == other.token_type and self.value == other.value
+    def __cmp__(self, other):
+        if isinstance(other, Token):
+            return cmp((self.token_type, self.value), (other.token_type, other.value))
+        elif (isinstance(other, list) or isinstance(other, tuple)) and len(other) == 2:
+            return cmp((self.token_type, self.value), other)
+        else:
+            raise TypeError("cannot compare Token to {0}".format(repr(type(other))))
 
 class LexerError(RuntimeError):
     pass
