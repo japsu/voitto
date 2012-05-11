@@ -19,8 +19,11 @@ tracking via a REST API) are also being planned.
 Installation
 ============
 
-::
+The use of pip is recommended::
+
     pip install voitto
+
+Standard setup.py magic works, too (including setup.py develop).
 
 Tappio utilities
 ================
