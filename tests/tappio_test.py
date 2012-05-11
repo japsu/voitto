@@ -30,6 +30,7 @@ from tappio.parser import Parser, ParserError
 
 from .helpers import skipped
 
+
 SIMPLE_EXAMPLE = """
 (identity "Tappio" version "versio 0.22" finances (fiscal-year "test" (date 2010 1 1) (date 2010 12 31) (account-map (account -1 "Vastaavaa" ()) (account -1 "Vastattavaa" ()) (account -1 "Tulos" ())) ()))
 """
@@ -41,15 +42,17 @@ COMPLEX_EXAMPLE = """
  finances (fiscal-year "Esimerkkiyhdistys ery"
                        (date 2003 1 1)
                        (date 2003 12 31)
-                       (account-map (account -1 "Vastaavaa" ((account 101 "Pankkitili")))
-                                    (account -1 "Vastattavaa" ((account 201 "Oma p\xe4\xe4oma")))
-                                    (account -1 "Tulos" ((account 300 "Tulot") (account 400 "Menot"))))              
+                       (account-map (account -1 "Vastaavaa" ((account 101 "Pankkitili" ())))
+                                    (account -1 "Vastattavaa" ((account 201 "Oma p\xe4\xe4oma" ())))
+                                    (account -1 "Tulos" ((account 300 "Tulot" ()) (account 400 "Menot" ()))))              
                        ((event 1 (date 2003 1 1) "Tilinavaus" ((101 (money 123456)) (201 (money -123456)))))))
 """
+
 
 def lexer_single(input, expected_tokens):
     tokens = list(Lexer().lex_string(input))
     assert_equal(expected_tokens, tokens)
+
 
 def lexer_test():
     # integer tests
@@ -107,32 +110,36 @@ def lexer_test():
         ('brace_open', ''),
         ('symbol', 'account'), ('integer', '-1'), ('string', 'Vastaavaa'),
 
-        # ((account 101 "Pankkitili")))
+        # ((account 101 "Pankkitili" ())))
         ('brace_open', ''), ('brace_open', ''),
         ('symbol', 'account'), ('integer', '101'), ('string', 'Pankkitili'),
+        ('brace_open', ''), ('brace_close', ''),
         ('brace_close', ''), ('brace_close', ''), ('brace_close', ''),
 
         # (account -1 "Vastattavaa"
         ('brace_open', ''),
         ('symbol', 'account'), ('integer', '-1'), ('string', 'Vastattavaa'),
 
-        # ((account 201 "Oma pääoma"")))
+        # ((account 201 "Oma pääoma"" ())))
         ('brace_open', ''), ('brace_open', ''),
         ('symbol', 'account'), ('integer', '201'), ('string', 'Oma p\xe4\xe4oma'),
+        ('brace_open', ''), ('brace_close', ''),
         ('brace_close', ''), ('brace_close', ''), ('brace_close', ''),
 
         # (account -1 "Tulos"
         ('brace_open', ''),
         ('symbol', 'account'), ('integer', '-1'), ('string', 'Tulos'),
 
-        # ((account 300 "Tulot")
+        # ((account 300 "Tulot" ())
         ('brace_open', ''), ('brace_open', ''),
         ('symbol', 'account'), ('integer', '300'), ('string', 'Tulot'),
+        ('brace_open', ''), ('brace_close', ''),
         ('brace_close', ''),
 
-        # (account 400 "Menot")))))
+        # (account 400 "Menot" ())))))
         ('brace_open', ''),
         ('symbol', 'account'), ('integer', '400'), ('string', 'Menot'),
+        ('brace_open', ''), ('brace_close', ''),
         ('brace_close', ''), ('brace_close', ''), ('brace_close', ''), ('brace_close', ''),
 
         # ((event 1
@@ -158,6 +165,7 @@ def lexer_test():
         ('brace_close', ''), ('brace_close', ''), ('brace_close', ''),
     ])  
 
+
 def parser_single(input):
     lex = Lexer()
 
@@ -166,6 +174,7 @@ def parser_single(input):
     except ParserError, e:
         print lex.linenum, lex.chnum
         raise e
+
 
 def writer_single(input):
     good_tokens = list(Lexer().lex_string(input))
@@ -178,11 +187,12 @@ def writer_single(input):
 
     assert_equal(good_tokens, potentially_bad_tokens)
 
+
 def parser_test():
     parser_single(SIMPLE_EXAMPLE)
     parser_single(COMPLEX_EXAMPLE)
 
-@skipped
+
 def writer_test():
     writer_single(SIMPLE_EXAMPLE)
     writer_single(COMPLEX_EXAMPLE)
