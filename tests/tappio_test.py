@@ -72,8 +72,7 @@ def lexer_test():
     # string tests
     lexer_single('"foobar"', [("string", "foobar")])
 
-    with assert_raises(LexerError):
-        lexer_single('"foobar', [])
+    assert_raises(LexerError, lexer_single, '"foobar', [])
 
     lexer_single(r'"foo\"bar"', [("string", 'foo"bar')])
     lexer_single(r'"foo\\bar"', [("string", r'foo\bar')])
