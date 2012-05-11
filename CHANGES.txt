@@ -1,0 +1,119 @@
+Changelog
+=========
+
+0.0.1 (2012-05-11)
+------------------
+
+- Release 0.0.1. [Santtu Pajukanta]
+
+- Gitignore: dist. [Santtu Pajukanta]
+
+- Issues: cease using ditz. [Santtu Pajukanta]
+
+- Clean up. [Santtu Pajukanta]
+
+- Bah @ github, use .rst for ReST. [Santtu Pajukanta]
+
+- Packaging guide recommends .txt extension for text files. [Santtu
+  Pajukanta]
+
+- Bah @ github rst. [Santtu Pajukanta]
+
+- Add installation instructions. [Santtu Pajukanta]
+
+- Even better. [Santtu Pajukanta]
+
+- Update to reflect new packaging. [Santtu Pajukanta]
+
+- Gitignore: add *.egg-info. [Santtu Pajukanta]
+
+- Reorganize for setup.py. [Santtu Pajukanta]
+
+- Missingacct: print accounts that are in some but not all input files.
+  [Santtu Pajukanta]
+
+- Tlkmerge: fix missing return and imports. [Santtu Pajukanta]
+
+- Extract: fix 'taseen tilinavaukset' [Santtu Pajukanta]
+
+- Mentien move_entries.py. [Santtu Pajukanta]
+
+- Move_entries: from one account to another. [Santtu Pajukanta]
+
+- Docs: rambling about projected situation. [Santtu Pajukanta]
+
+- Issues/voitto-2: closed (there is now a tlkmerge, with rough edges)
+  [Santtu Pajukanta]
+
+- Git diff documentation for indent.py in README. [Santtu Pajukanta]
+
+- Mention tlkmerge.py and graph.py in README. [Santtu Pajukanta]
+
+- Issues/voitto-4: tlkmerge: actually combine accounts. [Santtu
+  Pajukanta]
+
+- Tlkmerge: work in progress. [Santtu Pajukanta]
+
+- Graph: totally useless toy. [Santtu Pajukanta]
+
+- Some short introduction. [Santtu Pajukanta]
+
+- Issues: babble about commenting the code and the [ass, lia, ear]
+  SNAFU. [Santtu Pajukanta]
+
+- Extract: an utility to extract shorter periods from a tlk file.
+  [Santtu Pajukanta]
+
+- Tappio: use datetime.date instead of datetime.datetime. [Santtu
+  Pajukanta]
+
+- Print_earnings: extract earnings report in ugly CSV. [Santtu
+  Pajukanta]
+
+- Renumber, print_accounts: also work with stdin/stdout. [Santtu
+  Pajukanta]
+
+- Gitignore: decrease annoyance. [Santtu Pajukanta]
+
+- Tappio: pretty printing support. [Santtu Pajukanta]
+
+- Gitignore: ignore .pyc files. [Santtu Pajukanta]
+
+- Issues: let's include .ditz-config. [Santtu Pajukanta]
+
+- Tappio: simple read_file/write_file API. [Santtu Pajukanta]
+
+- Issues/voitto-3: test_tappio.py fails. [Santtu Pajukanta]
+
+- Issues: proposal for tlkmerge. [Santtu Pajukanta]
+
+- Examples: they were missing. [Santtu Pajukanta]
+
+- Issues: initialize issue tracker. [Santtu Pajukanta]
+
+- Renumber: also sort accounts. [Santtu Pajukanta]
+
+- Print_accounts: a tool to print the account map of a tlk file. [Santtu
+  Pajukanta]
+
+- Renumber: use kwarg for start. [Santtu Pajukanta]
+
+- Renumber: use the start parameter for what it's supposed to do.
+  [Santtu Pajukanta]
+
+- Tappio.Writer: fixed two grave bugs. [Santtu Pajukanta]
+
+- Renumber: renumber events in tappio files. [Santtu Pajukanta]
+
+- Tappio: tappio file writer. [Santtu Pajukanta]
+
+- Test_with_trace: Python header. [Santtu Pajukanta]
+
+- Parser: oops, forgot parse_entry. [Santtu Pajukanta]
+
+- Test_tappio: fixed an example that was wrong(?) in Tappio
+  documentation. [Santtu Pajukanta]
+
+- Tappio: working(?) parser. [Santtu Pajukanta]
+
+
