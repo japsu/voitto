@@ -18,6 +18,15 @@ operation (in the DVCS sense). Some "web 2.0" features (e-invoices/social debt
 tracking via a REST API) are also being planned.
 
 
+Requirements
+============
+
+* Python_ (2.6 minimum, 2.7 preferred)
+* Setuptools_
+
+.. _Python: http://www.python.org
+.. _Setuptools: https://pypi.python.org/pypi/setuptools#installation-instructions
+
 Installation
 ============
 
@@ -31,9 +40,10 @@ Tappio utilities
 ================
 
 At the moment Voitto only consists of a small collection of tools to work
-with Tappio, a simple closed-source freeware bookkeeping application for
-Windows. For more information about Tappio, see 
-http://www.lahdenniemi.fi/jussi/tappio/
+with Tappio_, a simple closed-source freeware bookkeeping application for
+Windows.
+
+.. _Tappio: http://www.lahdenniemi.fi/jussi/tappio/
 
 Current utilities in descending order of usefulness:
 
