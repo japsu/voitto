@@ -144,6 +144,12 @@ class Writer(object):
         else:
             self.write("(",")")
 
+        if account.vat_type:
+            self.write("(", "vat", account.vat_type)
+            if account.vat_percent:
+                self.write(account.vat_percent)
+            self.write(")")
+
         self.write(")")
 
     def write_events(self, events):
