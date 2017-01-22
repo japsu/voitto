@@ -2,6 +2,8 @@
 Voitto - a simple yet efficient double ledger
 =============================================
 
+::
+
     Copyright (C) 2010-2017 Santtu Pajukanta
     Copyright (C) 2017 Jarno Elonen
 
