@@ -68,9 +68,11 @@ class Document(object):
 
 
 class Account(object):
-    def __init__(self, number=None, name="", subaccounts=None):
+    def __init__(self, number=None, name="", subaccounts=None, vat_type=None, vat_percent=None):
         self.number = number
         self.name = name
+        self.vat_type = vat_type
+        self.vat_percent = vat_percent
         self.subaccounts = subaccounts if subaccounts is not None else []
 
 

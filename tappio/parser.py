@@ -161,9 +161,22 @@ class Parser(object):
 
             self.token("brace_close")
 
+        vat_type = None
+        vat_percent = None
+        next_type, unused = self.peek()
+        if next_type == "brace_open":
+            self.token("brace_open")
+            self.token("symbol", "vat")
+            unused, vat_type = self.token("symbol")
+            next_type, unused = self.peek()
+            if next_type == "integer":
+                unused, vat_percent = self.token("integer")
+            self.token("brace_close")
+
+
         self.token("brace_close")
 
-        return Account(account_number, account_name, subaccounts)
+        return Account(account_number, account_name, subaccounts, vat_type, vat_percent)
 
     def parse_events(self):
         self.token("brace_open")
