@@ -2,7 +2,8 @@
 Voitto - a simple yet efficient double ledger
 =============================================
 
-Copyright (C) 2010-2012 Santtu Pajukanta <santtu@pajukanta.fi>
+    Copyright (C) 2010-2017 Santtu Pajukanta
+    Copyright (C) 2017 Jarno Elonen
 
 Voitto is licensed under the GNU General Public License, version 3 or later.
 See the file COPYING.txt for the complete license.
