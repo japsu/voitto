@@ -24,11 +24,9 @@ tracking via a REST API) are also being planned.
 Requirements
 ============
 
-* Python_ (2.6 minimum, 2.7 preferred)
-* Setuptools_
+* Python_ (3.6 minimum)
 
 .. _Python: http://www.python.org
-.. _Setuptools: https://pypi.python.org/pypi/setuptools#installation-instructions
 
 Installation
 ============

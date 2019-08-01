@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.1.0 (2019-08-01)
+------------------
+
+- Port to Python 3, Python 2 no longer supported.
+
 0.0.1 (2012-05-11)
 ------------------
 
@@ -115,5 +120,3 @@ Changelog
   documentation. [Santtu Pajukanta]
 
 - Tappio: working(?) parser. [Santtu Pajukanta]
-
-
