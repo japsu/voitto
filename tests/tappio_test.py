@@ -1,26 +1,22 @@
-#!/usr/bin/env python
-# encoding: utf-8
-# vim: shiftwidth=4 expandtab
-#
 # Voitto - a simple yet efficient double ledger bookkeeping system
 # Copyright (C) 2010 Santtu Pajukanta <santtu@pajukanta.fi>
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
 
-from StringIO import StringIO
+from io import StringIO
 
 from nose.tools import *
 
@@ -44,7 +40,7 @@ COMPLEX_EXAMPLE = """
                        (date 2003 12 31)
                        (account-map (account -1 "Vastaavaa" ((account 101 "Pankkitili" ())))
                                     (account -1 "Vastattavaa" ((account 201 "Oma p\xe4\xe4oma" ())))
-                                    (account -1 "Tulos" ((account 300 "Tulot" ()) (account 400 "Menot" ()))))              
+                                    (account -1 "Tulos" ((account 300 "Tulot" ()) (account 400 "Menot" ()))))
                        ((event 1 (date 2003 1 1) "Tilinavaus" ((101 (money 123456)) (201 (money -123456)))))))
 """
 
@@ -144,7 +140,7 @@ def lexer_test():
 
         # ((event 1
         ('brace_open', ''), ('brace_open', ''), ('symbol', 'event'), ('integer', '1'),
-        
+
         # (date 2003 1 1)
         ('brace_open', ''),
         ('symbol', 'date'), ('integer', '2003'), ('integer', '1'), ('integer', '1'),
@@ -163,16 +159,16 @@ def lexer_test():
         ('integer', '201'), ('brace_open', ''), ('symbol', 'money'), ('integer', '-123456'),
         ('brace_close', ''), ('brace_close', ''), ('brace_close', ''), ('brace_close', ''),
         ('brace_close', ''), ('brace_close', ''), ('brace_close', ''),
-    ])  
+    ])
 
 
 def parser_single(input):
     lex = Lexer()
 
     try:
-        print Parser(lex.lex_string(input)).parse_document()
-    except ParserError, e:
-        print lex.linenum, lex.chnum
+        print(Parser(lex.lex_string(input)).parse_document())
+    except ParserError as e:
+        print(lex.linenum, lex.chnum)
         raise e
 
 

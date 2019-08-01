@@ -1,19 +1,16 @@
-# encoding: utf-8
-# vim: shiftwidth=4 expandtab
-#
 # Voitto - a simple yet efficient double ledger bookkeeping system
 # Copyright (C) 2010 Santtu Pajukanta <santtu@pajukanta.fi>
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
@@ -21,6 +18,8 @@
 """
 A lexer for the Tappio file format.
 """
+
+from collections import namedtuple
 
 TOKENS = (
     'brace_open',
@@ -40,7 +39,7 @@ def build_set(*args):
                 s.add(chr(k))
         else:
             for ch in arg:
-                assert type(ch) in (str, unicode)
+                assert type(ch) in (str, str)
                 assert len(ch) == 1
                 s.add(ch)
 
@@ -50,24 +49,7 @@ DIGITS = "0123456789"
 SYMBOL_CHARS = build_set(('a', 'z'), ('A', 'Z'), '!$%&/+?-_*')
 WHITESPACE = " \t\r\n"
 
-class Token(object):
-    def __init__(self, token_type, value=None):
-        assert token_type in TOKENS, "Invalid token: {0}".format(token_type)
-        self.token_type = token_type
-        self.value = value
-
-    def __repr__(self):
-        token_type = getattr(self, "token_type", None)
-        value = repr(getattr(self, "value", None))
-        return "<Token: {0} {1}>".format(token_type, value)
-
-    def __cmp__(self, other):
-        if isinstance(other, Token):
-            return cmp((self.token_type, self.value), (other.token_type, other.value))
-        elif (isinstance(other, list) or isinstance(other, tuple)) and len(other) == 2:
-            return cmp((self.token_type, self.value), other)
-        else:
-            raise TypeError("cannot compare Token to {0}".format(repr(type(other))))
+Token = namedtuple('Token', 'token_type value')
 
 class LexerError(RuntimeError):
     pass
@@ -142,7 +124,7 @@ class Lexer(object):
             self.string_start(ch)
         else:
             raise LexerError("unexpected {0} in generic".format(repr(ch)))
-        
+
     def integer_negative(self, ch):
         self.enter("integer")
         self.expect(ch, "-")
@@ -169,10 +151,10 @@ class Lexer(object):
     def string_start(self, ch):
         self.enter("string")
         self.expect(ch, '"')
-    
+
     def string(self, ch):
         self.enter("string")
-        
+
         if ch == '"':
             self.emit("string")
             self.enter("generic")

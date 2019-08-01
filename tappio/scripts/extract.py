@@ -1,6 +1,4 @@
 #!/usr/bin/env python
-# encoding: utf-8
-# vim: shiftwidth=4 expandtab
 
 from datetime import date, datetime
 
@@ -41,7 +39,7 @@ def balances(document, at_date=None, description=BALANCES_DEFAULT_DESCRIPTION,
     balances = collect_earnings([i for i in document.events if i.date < at_date])
     balance_accounts = get_balance_accounts(document.accounts)
 
-    for account_number, cents in balances.iteritems():
+    for account_number, cents in balances.items():
         if account_number in balance_accounts:
             result.entries.append(Entry(account_number=account_number, cents=cents))
 
@@ -84,4 +82,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()    
+    main()

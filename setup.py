@@ -9,7 +9,7 @@ def read(fname):
 
 setup(
     name='voitto',
-    version='0.0.1',
+    version='0.1.0',
     description='A simple yet efficient double ledger',
     long_description=read('README.rst'),
     license='GPLv3+',
@@ -27,7 +27,6 @@ Natural Language :: English
 Natural Language :: Finnish
 Operating System :: Microsoft :: Windows
 Operating System :: POSIX :: Linux
-Programming Language :: Python :: 2.7
 Topic :: Office/Business :: Financial :: Accounting
         """.strip().splitlines(),
     zip_safe=True,

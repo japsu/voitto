@@ -1,7 +1,4 @@
 #!/usr/bin/env python
-# encoding: utf-8
-# vim: shiftwidth=4 expandtab
-
 
 from collections import defaultdict
 from tappio import loadf, dumpf
@@ -33,23 +30,24 @@ def missing_accounts(*input_filenames):
     flat_accounts = dict((filename, flatten_accounts(document.accounts)) for (filename, document) in documents)
 
     all_accounts = dict()
-    map(all_accounts.update, flat_accounts.itervalues())
-    
+    for account in flat_accounts.values():
+        all_accounts.update(account)
+
     havity = defaultdict(set)
-    for account_num, account in all_accounts.iteritems():
-        for filename, accounts in flat_accounts.iteritems():
+    for account_num, account in all_accounts.items():
+        for filename, accounts in flat_accounts.items():
             if account_num in accounts:
                 havity[account_num].add(filename)
 
-    for account_num, filenames in havity.iteritems():
+    for account_num, filenames in havity.items():
         fmt_filenames = " ".join(filenames)
 
         if filenames == input_filenames:
             if not ONLY:
-                print "{account_num}: ALL  {fmt_filenames}".format(**locals())
+                print("{account_num}: ALL  {fmt_filenames}".format(**locals()))
         else:
-            print "{account_num}: ONLY {fmt_filenames}".format(**locals())
-            
+            print("{account_num}: ONLY {fmt_filenames}".format(**locals()))
+
 
 def main():
     from sys import argv

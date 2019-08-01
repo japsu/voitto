@@ -1,19 +1,16 @@
-# encoding: utf-8
-# vim: shiftwidth=4 expandtab
-#
 # Voitto - a simple yet efficient double ledger bookkeeping system
 # Copyright (C) 2010 Santtu Pajukanta <santtu@pajukanta.fi>
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
@@ -47,7 +44,7 @@ class Parser(object):
             self.next_token = None
         else:
             try:
-                token = self.token_iterator.next()
+                token = next(self.token_iterator)
             except StopIteration:
                 self.error("end of file while expecting {0}", expected_type)
 
@@ -64,7 +61,7 @@ class Parser(object):
             token = self.next_token
         else:
             try:
-                token = self.token_iterator.next()
+                token = next(self.token_iterator)
                 self.next_token = token
             except StopIteration:
                 token = None
@@ -126,7 +123,7 @@ class Parser(object):
     def parse_account_map(self):
         self.token("brace_open")
         self.token("symbol", "account-map")
-        
+
         next_type, unused = self.peek()
         while next_type == "brace_open":
             self.document.accounts.append(self.parse_account())
@@ -192,11 +189,11 @@ class Parser(object):
         self.token("brace_open")
 
         self.token("symbol", "event")
-        
+
         unused, number = self.token("integer")
         date = self.parse_date()
         unused, description = self.token("string")
-        
+
         entries = []
         next_type, unused = self.peek()
         if next_type == "brace_open":
@@ -216,7 +213,7 @@ class Parser(object):
 
     def parse_entry(self):
         self.token("brace_open")
-        
+
         unused, account_number = self.token("integer")
         cents = self.parse_money()
 

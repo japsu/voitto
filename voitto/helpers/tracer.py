@@ -6,6 +6,6 @@ def traceit(frame, event, arg):
         filename, linenumber, funcname, text = stack[-1]
         args = inspect.getargvalues(frame)
         indent = len(stack) * " "
-        print "%s%s%s" % (indent, funcname, inspect.formatargvalues(*args))
+        print("%s%s%s" % (indent, funcname, inspect.formatargvalues(*args)))
 
     return traceit

@@ -1,9 +1,5 @@
 #!/usr/bin/env python
-# encoding: utf-8
-# vim: shiftwidth=4 expandtab
-#
 # TODO: Escape stuff
-
 
 import sys
 from contextlib import contextmanager
@@ -36,7 +32,7 @@ def recursively_flatten_account(account, flat_accounts={}):
 
 def print_graph(edges, stream=sys.stdout):
     stream.write(GRAPH_HEADER)
-    
+
     for from_node, to_node in edges:
         stream.write(EDGE_TEMPLATE.format(from_node, to_node))
 
@@ -63,14 +59,14 @@ def construct_graph(events, flat_accounts):
                 debet_node = NODE_TEMPLATE.format(debet_account, flat_accounts[debet_account])
 
                 edges.add((kredit_node, debet_node))
-                
+
     return edges
 
 
 def graph(input_filename=None, output_filename=None):
     document = loadf(input_filename)
     flat_accounts = flatten_accounts(document.accounts)
-    edges = construct_graph(document.events, flat_accounts)    
+    edges = construct_graph(document.events, flat_accounts)
 
     with output_stream(output_filename) as stream:
         print_graph(edges, stream)

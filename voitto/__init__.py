@@ -1,5 +1,4 @@
-# encoding: utf-8
-# vim: shiftwidth=4 expandtab
+
 #
 # Voitto - a simple yet efficient double ledger bookkeeping system
 # Copyright (C) 2010 Santtu Pajukanta <santtu@pajukanta.fi>
@@ -21,4 +20,3 @@
 import pkg_resources
 
 __version__ = pkg_resources.get_distribution('voitto').version
-

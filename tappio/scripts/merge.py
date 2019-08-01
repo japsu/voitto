@@ -1,10 +1,8 @@
 #!/usr/bin/env python
-# encoding: utf-8
-# vim: shiftwidth=4 expandtab
-
 
 from tappio import loadf, dumpf
 from tappio.models import Document
+from functools import reduce
 
 
 def combine_accounts(earliers, laters):
